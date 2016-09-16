@@ -1,0 +1,941 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>FsReveal</title>
+    <meta name="description" content="SOLID Principles - Part 2: L. and I.">
+    <meta name="author" content="Fabricio Rateni">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="//code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="//code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+    <link type="text/css" rel="stylesheet" href="fsharp.formatting/styles/style.css" />
+    <link type="text/css" rel="stylesheet" href="fsharp.formatting/styles/deedle.css" />
+    <link type="text/css" rel="stylesheet" href="css/custom.css" />
+    <script src="fsharp.formatting/styles/tips.js" type="text/javascript"></script>
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <link rel="stylesheet" href="css/fsreveal.css">
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+    </script>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script language="javascript" type="text/javascript">
+        function init()
+        {
+            websocket = new WebSocket("ws://"+window.location.host+"/websocket");
+            websocket.onmessage = function(evt) { location.reload(); };
+        }
+        window.addEventListener("load", init, false);
+    </script>
+</head>
+<body>
+    <div class="reveal">
+        
+        <!-- Any section element inside of this container is displayed as a slide -->
+        <div class="slides">
+            <section >
+<h2>SOLID Principles</h2>
+<h4>Bruno Chaina</h4>
+<h4>Fabricio Rateni</h4>
+</section>
+<section >
+<h2>SOLID Principles</h2>
+<h3>Module 2</h3>
+<h3>"L" and "I"</h3>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li>Definition and Example</li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+Contract Rules
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+Type System Rules
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li>Role Interfaces</li>
+<li>Implementation and Clients</li>
+<li>Reasons to split interfaces</li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li><strong>Definition and Example</strong></li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+Contract Rules
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+Type System Rules
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li>Role Interfaces</li>
+<li>Implementation and Clients</li>
+<li>Reasons to split interfaces</li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h2>Liskov Substitution Principle</h2>
+<aside class="notes">
+- ppales mecanismos de OCP are abstraction and polymorphism<br/>
+- HERENCIA e INTERFACES<br/>
+- trampas?<br/>
+- como aplicarlos correctamente<br/>
+</aside>
+</section>
+<section >
+<h2>Liskov Substitution Principle</h2>
+<h3>Definition</h3>
+<blockquote>
+<p><strong>Subtype</strong> must always<br />
+be <strong><em>substitutable</em></strong> for<br />
+a <strong>Base</strong> type.</p>
+</blockquote>
+<aside class="notes">
+Es una simplificacion<br/>
+la palabra clave es substituible, diferente a un tipo tiene que ser de una clase<br/>
+</aside>
+</section>
+<section >
+<h2>Liskov Substitution Principle</h2>
+<h3>Case study</h3>
+<p><strong>ReadOnlyCollection</strong> implements <strong>ICollection</strong></p>
+<p><img src="images/ReadOnlyCollection.jpg" alt="ReadOnlyCollection" /></p>
+<aside class="notes">
+breve description esta jerarquia<br/>
+*****CODE EXAMPLE: SolidExamples.LSP.ReadOnlyCollection<br/>
+IsReadOnly<br/>
+</aside>
+</section>
+<section >
+<p><img src="images/Chloe-not.jpg" alt="Chloe-not" /></p>
+<aside class="notes">
+SMELL: Throwing NotSupportedException<br/>
+</aside>
+</section>
+<section >
+<h2>Liskov Substitution Principle</h2>
+<blockquote>
+<p>Consume <strong>any</strong> implementation <strong>without</strong> changing the <strong>correctness</strong> of the system.</p>
+</blockquote>
+<aside class="notes">
+- correctness is NOT behavior  <br/>
+- polymorphism changes behavior  <br/>
+- correctness at the very least means, no crashes  <br/>
+</aside>
+</section>
+<section >
+<h2>Liskov Substitution Principle</h2>
+<h3>Formal Definition</h3>
+<blockquote>
+<p>If <strong>S</strong> is a <em>subtype</em> of <strong>T</strong>,<br />
+then objects of type <strong>T</strong> may be replaced
+with objects of type <strong>S</strong>, without breaking <strong>the program</strong>.<br />
+— Barbara Liskov</p>
+</blockquote>
+<aside class="notes">
+Paper:  “Data Abstraction and Hierarchy,” 1988<br/>
+*****CODE EXAMPLE Square and rectangle<br/>
+</aside>
+</section>
+<section >
+<h3>IS-A</h3>
+<p><strong>IS-A</strong> is about behavior</p>
+<aside class="notes">
+Behaviorally, a Square is not a Rectangle<br/>
+classic Is-A -> Is-a subsitute<br/>
+how -> design by contract<br/>
+</aside>
+</section>
+<section >
+<h3>Validity / Correctness</h3>
+<blockquote>
+<p><strong>Validity is not intrinsic:</strong><br />
+A model, viewed in <strong>isolation</strong>,<br />
+can<strong>not</strong> be meaningfully validated.</p>
+</blockquote>
+</section>
+<section >
+<h3>How to Comply with LSP</h3>
+<p><img src="images/Keep-calm-and-follow-the-rules.png" alt="Keep-calm-and-follow-the-rules" /></p>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li>Definition and Example</li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+<strong>Contract Rules</strong>
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+Type System Rules
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li>Role Interfaces</li>
+<li>Implementation and Clients</li>
+<li>Reasons to split interfaces</li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h3>Contract rules - <strong>Preview</strong></h3>
+<ul>
+<li>Preconditions cannot be <strong>strengthened</strong> in a <em>subtype</em>.</li>
+<li>Postconditions cannot be <strong>weakened</strong> in a <em>subtype</em>.</li>
+<li>Invariants of the <strong>supertype</strong> must be preserved in a <em>subtype</em>.</li>
+</ul>
+<aside class="notes">
+Que es un Contrato?<br/>
+</aside>
+</section>
+<section >
+<h3>Contracts</h3>
+<p><img src="images/contracts.gif" alt="Contracts" /></p>
+</section>
+<section >
+<h3>Contracts</h3>
+<p><img src="images/InterfaceAsContract.jpg" alt="InterfaceAsContract" /></p>
+</section>
+<section >
+<h3>Design by Contract</h3>
+<ul>
+<li>Preconditions</li>
+<li>Postconditions</li>
+<li>Invariants</li>
+</ul>
+<aside class="notes">
+Prevent ourselves from having code that fails deep down a call stack<br/>
+Catch bad data as soon as possible<br/>
+</aside>
+</section>
+<section >
+<h3>Design by Contract</h3>
+<h4>Preconditions</h4>
+<blockquote>
+<p>Expresses the constraints under which a routine will function properly</p>
+</blockquote>
+<aside class="notes">
+ all of the state that is checked in a precondition mustbe publically accessible by clients<br/>
+***** Code example Contracts/Precondition<br/>
+</aside>
+</section>
+<section >
+<h3>Design by Contract</h3>
+<h4>Postconditions</h4>
+<blockquote>
+<p>Expresses properties of the state resulting from a routine’s execution</p>
+</blockquote>
+<aside class="notes">
+***** Code example Contracts/Postconditions<br/>
+</aside>
+</section>
+<section >
+<h3>Design by Contract</h3>
+<h4>Invariants</h4>
+<blockquote>
+<p>A predicate that remains true for the lifetime of an object</p>
+</blockquote>
+<aside class="notes">
+it is true after construction and must remain true until the object is out of scope.<br/>
+FlatRate deberia moverse a su propio tipo y el data Invariant estar en esa otra clase.  <br/>
+</aside>
+<aside class="notes">
+***** Code example Contracts/Invariants<br/>
+</aside>
+</section>
+<section >
+<h3>Contract rules - <strong>Review</strong></h3>
+<ul>
+<li>Preconditions cannot be <strong>strengthened</strong> in a <em>subtype</em>.</li>
+<li>Postconditions cannot be <strong>weakened</strong> in a <em>subtype</em>.</li>
+<li>Invariants of the <strong>supertype</strong> must be preserved in a <em>subtype</em>.</li>
+</ul>
+<aside class="notes">
+Estas son cosas que nosotros ya estamos usando en nuestro codigo<br/>
+A subtype should REQUIRE nothing more and PROMISE nothing less<br/>
+*** Code Example LSP Contracts 4 PreconBad y 5 PostConBad <br/>
+</aside>
+</section>
+<section >
+<h3>Language support</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">public</span> <span class="k">int</span> Insert(T item, <span class="k">int</span> index)
+    requires index <span class="o">&gt;</span><span class="o">=</span> <span class="n">0</span> <span class="o">&amp;</span><span class="o">&amp;</span> index <span class="o">&lt;</span><span class="o">=</span> Count
+    ensures <span class="k">return</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">0</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="k">return</span> <span class="o">&lt;</span> Count
+{
+    <span class="k">return</span> InsertCore(item, index);
+}
+</code></pre></td></tr></table>
+<aside class="notes">
+propuesta para C# 7<br/>
+language support muy limitado<br/>
+idealmente los contratos deberian estar asociados a la interface<br/>
+</aside>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li>Definition and Example</li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+Contract Rules
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+<strong>Type System Rules</strong>
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li>Role Interfaces</li>
+<li>Implementation and Clients</li>
+<li>Reasons to split interfaces</li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h3>Liskov Type System Rules - <strong>Preview</strong></h3>
+<ul>
+<li>There must be <strong>covariance</strong> of the <em>return types</em> in the subtype.</li>
+<li>There must be <strong>contravariance</strong> of the <em>method arguments</em> in the subtype.</li>
+<li>No <em>new exceptions</em> are allowed.</li>
+</ul>
+<aside class="notes">
+conceptos avanzados y bastante olvidados<br/>
+hoy entendemos Varianza<br/>
+</aside>
+</section>
+<section >
+<p><img src="images/Heroe.jpg" alt="Heroe" /></p>
+</section>
+<section >
+<h3>Liskov Type System Rules</h3>
+<h4>Variance</h4>
+<blockquote>
+<p>How subtyping between <em>more complex types</em> relates to subtyping between their components.</p>
+</blockquote>
+<p><img src="images/Variance001.jpg" alt="Variance001" /></p>
+<aside class="notes">
+subtyping: cuando puedo usar uno mas derivado o mas generico<br/>
+Tipos mas complejos, serian: <br/>
+list of Dogs  vs. list of Animals<br/>
+getFirstDog() vs. getFirstAnimal()     <br/>
+subtyping relation may be either preserved (NO SURPRISES), ignored, even REVERSED<br/>
+Category Theory<br/>
+</aside>
+</section>
+<section >
+<section >
+<h3>Liskov Type System Rules</h3>
+<h4>Covariance and Contravariance</h4>
+<ul>
+<li><strong>Covariance</strong> -&gt; Preserves Hierarchy</li>
+<li><strong>Contravariance</strong> -&gt; Reverses Hierarchy</li>
+<li><strong>Invariance</strong> -&gt; Ignores Hierarchy</li>
+</ul>
+<aside class="notes">
+**** CODE-EXAMPLES<br/>
+</aside>
+</section>
+<section >
+<p><img src="images/CovarianceContravariance-Net.jpg" alt="Homer-mnemonic" /></p>
+</section>
+<section >
+<h4>Java</h4>
+<p>Covariance</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs">                        <span class="o">?</span> extends T
+</code></pre></td></tr></table>
+<p>Contravariance</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs">                        <span class="o">?</span> super T
+</code></pre></td></tr></table>
+</section>
+</section>
+<section >
+<h3>Liskov Type System Rules - <strong>Review</strong></h3>
+<ul>
+<li>There must be <strong>covariance</strong> of the <em>return types</em> in the subtype.</li>
+<li>There must be <strong>contravariance</strong> of the <em>method arguments</em> in the subtype.</li>
+<li>No <em>new exceptions</em> are allowed.</li>
+</ul>
+</section>
+<section >
+<h3>Liskov Type System Rules</h3>
+<p><strong>No</strong> <em>new exceptions</em> are allowed</p>
+<aside class="notes">
+proposito de las excepciones: Separar Error Report de Error Handling<br/>
+Es recomendable armar una jerarquia de excepciones<br/>
+Si la clase Padre ya esta haciendo un throw exception de una exception A,<br/>
+en la clase derivada solo deberiamos hacer un throw de A o una exception que herede de A <br/>
+*****CODE EXAMPLE: SolidExamples.LSP.Exceptions<br/>
+</aside>
+</section>
+<section >
+<h4>LSP Code Smells: Downcasting</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs">Player player <span class="o">=</span> entity <span class="k">as</span> Player;
+<span class="k">if</span> (player <span class="o">!</span><span class="o">=</span> <span class="k">null</span>)
+{
+    <span class="c">// do something with it</span>
+}    
+</code></pre></td></tr></table>
+<aside class="notes">
+clase base casteada a clase hija, para acceder a metodos especificos<br/>
+</aside>
+</section>
+<section >
+<h4>LSP Code Smells: Making use of Method Hiding</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">public</span> <span class="k">class</span> BaseClass
+{  
+    <span class="k">public</span> <span class="k">virtual</span> <span class="k">int</span> ComputeNumber()
+    {
+        <span class="k">return</span> <span class="n">15</span>;
+    }
+}
+<span class="k">public</span> <span class="k">class</span> DerivedClass <span class="o">:</span> BaseClass
+{
+    <span class="k">public</span> <span class="k">new</span> <span class="k">decimal</span> ComputeNumber()
+    {
+        <span class="k">return</span> <span class="n">10</span>m;
+    }  
+}
+
+<span class="k">var</span> instance <span class="o">=</span> <span class="k">new</span> DerivedClass();  
+Console.WriteLine(instance.ComputeNumber()); <span class="c">// 10</span>
+
+<span class="k">var</span> upcasted <span class="o">=</span> (BaseClass)instance;
+Console.WriteLine(upcasted.ComputeNumber()); <span class="c">// 15</span>
+</code></pre></td></tr></table>
+<aside class="notes">
+Poor's man covariance<br/>
+</aside>
+<aside class="notes">
+a different DoMethod is called depending if you called it via the concretion or a reference upcasted to the base type.<br/>
+</aside>
+</section>
+<section >
+<h4>LSP Code Smells: Degenerate functions</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">public</span> <span class="k">class</span> Base
+{
+    <span class="k">public</span> <span class="k">virtual</span> <span class="k">void</span> f() {<span class="c">/*some code*/</span>}
+}
+
+<span class="k">public</span> <span class="k">class</span> Derived <span class="o">:</span> Base
+{
+    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> f() {}
+}
+</code></pre></td></tr></table>
+<aside class="notes">
+Another example: returning null instead of empty lists<br/>
+</aside>
+</section>
+<section >
+<h2>Interface Segregation Principle</h2>
+<p><img src="images/wheat_in_the_hands.jpg" alt="wheat_in_the_hands" /></p>
+<aside class="notes">
+este principio states that interfaces should be small.<br/>
+</aside>
+</section>
+<section >
+<blockquote>
+<p>Clients should <strong>not</strong> be forced<br />
+to <strong><em>depend</em></strong> on methods<br />
+they do <strong>not use</strong></p>
+</blockquote>
+<aside class="notes">
+regla Principal<br/>
+</aside>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li>Definition and Example</li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+Contract Rules
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+Type System Rules
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li><strong>Role Interfaces</strong></li>
+<li>Implementation and Clients</li>
+<li>Reasons to split interfaces</li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h2>Role Interfaces</h2>
+<ul>
+<li><p>Favor <strong>Role Interfaces</strong> over the usual "extracted interfaces"</p></li>
+<li><p>Very unlikely that you build a <strong>second</strong> class that implements a "extracted interface"</p></li>
+<li><p><strong>Extreme Role Interfaces</strong> have a <em>single</em> method</p></li>
+</ul>
+<aside class="notes">
+- extracted interface === header interface (because of c++ header files, .h files)<br/>
+- construyendo abstracciones y puntos de extension bastante al pedo <br/>
+- Extreme Role Interface. Not very common but very powerfull to overcome LSP issues.<br/>
+- ideally "you dont want a feature?" Dont implement the interface!<br/>
+- soluciona el problema de "borrar" features<br/>
+- tends to be a bit verbose.<br/>
+- At their simplest, interfaces contain single methods that serve a single purpose. <br/>
+- At this level of granularity, they are akin to delegates, but with many added benefits.<br/>
+- **** CODE EXAMPLE ISP RoleInterfaces<br/>
+</aside>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li>Definition and Example</li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+Contract Rules
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+Type System Rules
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li>Role Interfaces</li>
+<li><strong>Implementation and Clients</strong></li>
+<li>Reasons to split interfaces</li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h2>Implementation and Clients</h2>
+<ul>
+<li>Multiple implementations, multiple instances</li>
+<li>Single implementation, single instance</li>
+</ul>
+<aside class="notes">
+multiple es mas versatil<br/>
+single podria ser util para implementaciones hoja<br/>
+*****CODE EXAMPLE - Implementation<br/>
+</aside>
+</section>
+<section >
+<h3>Anti-pattern: The Interface Soup</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">interface</span> ISoupAntiPattern&lt;TEntity&gt; <span class="o">:</span> IRead&lt;TEntity&gt;, 
+                                      ISave&lt;TEntity&gt;, 
+                                      IDelete&lt;TEntity&gt;
+{
+}
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Agenda</h3>
+<ul>
+<li>
+"L" - Liskov Substitution Principle
+<ul>
+<li>Definition and Example</li>
+<li>
+How to Comply with LSP
+<ul>
+<li>
+Contract Rules
+<ul>
+<li>Desing by Contract</li>
+<li>Rules</li>
+</ul>
+</li>
+<li>
+Type System Rules
+<ul>
+<li>Covariance, Contravariance and Invariance</li>
+<li>Rules</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+"I" - Interface Segregation Principle
+<ul>
+<li>Role Interfaces</li>
+<li>Implementation and Clients</li>
+<li><strong>Reasons to split interfaces</strong></li>
+</ul>
+</li>
+</ul>
+</section>
+<section >
+<h2>Reasons to split interfaces</h2>
+<ul>
+<li>Decorators</li>
+<li>Client code needs</li>
+<li>Architectural needs</li>
+</ul>
+<aside class="notes">
+****** CODE EXAMPLE - para Client need (LSP), volver a la interface de Covariance<br/>
+mostrar que a veces se desea hacer un codigo covariante y contravariante<br/>
+</aside>
+</section>
+<section >
+<h3>Architectural needs</h3>
+<h4>CQRS Command/Query Responsibility Segregation</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">public</span> <span class="k">interface</span> IPersistence
+{
+    IEnumerable&lt;Item&gt; GetAll();
+    Item GetByID(Guid identity);
+    IEnumerable&lt;Item&gt; FindByCriteria(<span class="k">string</span> criteria);
+    <span class="k">void</span> Save(Item item);
+    <span class="k">void</span> Delete(Item item);
+}
+</code></pre></td></tr></table>
+<ul>
+<li>Reads from: MongoDb</li>
+<li>Writes to: Sql Server</li>
+</ul>
+<aside class="notes">
+El hecho de que todos los metods se implementen en una misma clase agrega muchisimas dependencias innecesarias <br/>
+</aside>
+</section>
+<section >
+<h3>Architectural needs</h3>
+<h4>CQRS Command/Query Responsibility Segregation</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">public</span> <span class="k">interface</span> IPersistenceQueries
+{
+    IEnumerable&lt;Item&gt; GetAll();
+    Item GetByID(Guid identity);
+    IEnumerable&lt;Item&gt; FindByCriteria(<span class="k">string</span> criteria);
+}
+
+<span class="k">public</span> <span class="k">interface</span> IPersistenceCommands
+{
+    <span class="k">void</span> Save(Item item);
+    <span class="k">void</span> Delete(Item item);
+}
+</code></pre></td></tr></table>
+<aside class="notes">
+Patron de arquitectura<br/>
+</aside>
+</section>
+<section >
+<section >
+<h3>Single-method interfaces</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">public</span> <span class="k">interface</span> ITask
+{
+    <span class="k">void</span> Do();
+}
+
+<span class="k">public</span> <span class="k">interface</span> IAction&lt;TContext&gt;
+{
+    <span class="k">void</span> Do(TContext context);
+}
+
+<span class="k">public</span> <span class="k">interface</span> IFunction&lt;TReturn&gt;
+{
+    TReturn Do(); 
+}
+</code></pre></td></tr></table>
+<aside class="notes">
+- Analogas a: Action, Func and Predicate<br/>
+- podrian ser resultas con delegados, actions, etc pero asi pueden ser decorated, adapted, and composed<br/>
+</aside>
+</section>
+<section >
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="cs"><span class="k">int</span> anwserToEverything <span class="o">=</span> <span class="n">42</span>;
+Action closure <span class="o">=</span>  () <span class="o">=</span><span class="o">&gt;</span> { Console.WriteLine(anwserToEverything); };  
+</code></pre></td></tr></table>
+<aside class="notes">
+Poors man<br/>
+</aside>
+</section>
+<section >
+<p><img src="images/Zen.Koan.png" alt="master" /></p>
+<aside class="notes">
+The venerable master Qc Na was walking with his student, Anton.  Hoping to prompt the master into a discussion, Anton said "Master, I have heard that objects are a very good thing - is this true?"  <br/>
+Qc Na looked pityingly at his student and replied, "Foolish pupil - objects are merely a poor man's closures."<br/>
+</aside>
+</section>
+<section >
+<p><img src="images/Zen.Koan.png" alt="master" /></p>
+<p><strong>Objects</strong> <em>are</em> Poor's man <strong>Closures</strong></p>
+<aside class="notes">
+Chastised, Anton took his leave from his master and returned to his cell, intent on studying closures.  He carefully read the entire "Lambda: The Ultimate..." series of papers and its cousins, and implemented a small Scheme interpreter with a closure-based object system.  He learned much, and looked forward to informing his master of his progress.<br/>
+On his next walk with Qc Na, Anton attempted to impress his master by saying "Master, I have diligently studied the matter, and now understand that objects are truly a poor man's closures."  Qc Na responded by hitting Anton with his stick, saying "When will you learn? Closures are a poor man's object."  At that moment, Anton became enlightened.<br/>
+</aside>
+</section>
+<section >
+<p><img src="images/Zen.Koan.png" alt="master" /></p>
+<p><strong>Objects</strong> <em>are</em> Poor's man <strong>Closures</strong><br />
+<strong>Closures</strong> <em>are</em> Poor's man <strong>Objects</strong></p>
+<aside class="notes">
+The next step is Functional<br/>
+instead of Closures (or single method objects) y Partial Function Application<br/>
+</aside>
+</section>
+</section>
+<section >
+<p><img src="images/to_be_concluded_back_to_the_future.jpg" alt="ToBeConcluded" /></p>
+</section>
+
+
+        </div>
+    </div>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+        // Add the nohighlight class and data-noescape attribute to code elements that have already been formatted by FSharp.Formatting
+        $('pre.highlighted code').addClass('nohighlight').attr('data-noescape', '');
+
+        // Full list of configuration options available here:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            transition: 'convex', // default/cube/page/concave/zoom/linear/fade/none
+
+            // Parallax scrolling
+            // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+            // parallaxBackgroundSize: '2100px 900px',
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: 'plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: 'plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/zoom-js/zoom.js', async: true, condition: function () { return !!document.body.classList; } },
+                { src: 'plugin/notes/notes.js', async: true, condition: function () { return !!document.body.classList; } }
+            ]
+        });
+
+    </script>
+</body>
+</html>
+

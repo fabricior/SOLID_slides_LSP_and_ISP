@@ -1,1 +1,0 @@
-# SOLID_slides_LSP_and_ISP
